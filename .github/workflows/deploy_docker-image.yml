@@ -1,7 +1,8 @@
 name: Build and push Docker image
 on:
-  repository_dispatch:
-    types: [release-published]
+  push:
+    branches:
+      - main  # or the branch you want to deploy from
 
 jobs:
   build:
