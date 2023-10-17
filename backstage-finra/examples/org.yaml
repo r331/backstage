@@ -1,0 +1,68 @@
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-user
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: guest
+spec:
+  memberOf: [guests, OCR-TEAM]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: Taylor
+spec:
+  memberOf: [OCRTEAM]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: James
+spec:
+  memberOf: [MLTEAM]
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: guests
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: "OCRTEAM"
+spec:
+  type: team
+  children: []
+  profile:
+    displayName: OCRTEAM
+    email: ocr_team@fin.org
+    picture: https://example.com/groups/bu-infrastructure.jpeg
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: "mlteam"
+  description: The infra business unit
+spec:
+  type: business-unit
+  children: []
+  profile:
+    displayName: MLTEAM
+    email: ML_team@fin.org
+    picture: https://example.com/groups/bu-infrastructure.jpeg
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: "MLENABLEMENT"
+spec:
+  type: team
+  children: []
+  profile:
+    displayName: MLENABLEMENT
+    email: ML-ENABLEMENT@fin.org
+    picture: https://example.com/groups/bu-infrastructure.jpeg

@@ -1,0 +1,131 @@
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-system
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: examples
+spec:
+  owner: guests
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: example-website
+spec:
+  type: website
+  lifecycle: experimental
+  owner: guests
+  system: examples
+  providesApis: [example-grpc-api]
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: example-grpc-api
+spec:
+  type: grpc
+  lifecycle: experimental
+  owner: guests
+  system: examples
+  definition: |
+    syntax = "proto3";
+
+    service Exampler {
+      rpc Example (ExampleMessage) returns (ExampleMessage) {};
+    }
+
+    message ExampleMessage {
+      string example = 1;
+    };
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: pdf-ocr-api
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/mlteam
+  system: examples
+  definition: |
+    openapi: 3.0.0
+    info:
+      version: 1.0.0
+      title: PDF to OCR Service
+      description: A service that converts PDF files into OCR JSON data
+    paths:
+      /upload:
+        post:
+          summary: Upload a PDF to get OCR data
+          requestBody:
+            content:
+              application/pdf:
+                schema:
+                  type: string
+                  format: binary
+            required: true
+          responses:
+            '200':
+              description: OCR conversion successful
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/OCRData'
+            '400':
+              description: Bad request, typically because of invalid file format
+            '500':
+              description: Internal server error
+    components:
+      schemas:
+        OCRData:
+          type: object
+          properties:
+            pages:
+              type: array
+              items:
+                $ref: '#/components/schemas/Page'
+        Page:
+          type: object
+          properties:
+            number:
+              type: integer
+              format: int32
+              description: Page number
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContentItem'
+        ContentItem:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [text, image]
+              description: Type of the content, can be text or image
+            position:
+              $ref: '#/components/schemas/Position'
+            text:
+              type: string
+              description: OCR'ed text, present if type is text
+        Position:
+          type: object
+          properties:
+            x:
+              type: integer
+              format: int32
+              description: X coordinate
+            y:
+              type: integer
+              format: int32
+              description: Y coordinate
+            width:
+              type: integer
+              format: int32
+              description: Width of the content
+            height:
+              type: integer
+              format: int32
+              description: Height of the content
