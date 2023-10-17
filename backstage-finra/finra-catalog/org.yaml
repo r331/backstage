@@ -12,7 +12,7 @@ kind: User
 metadata:
   name: Taylor
 spec:
-  memberOf: [OCRTEAM]
+  memberOf: [OCRTEAM, MLENABLEMENT]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -61,7 +61,7 @@ metadata:
   name: "MLENABLEMENT"
 spec:
   type: team
-  children: []
+  children: [OCRTEAM]
   profile:
     displayName: MLENABLEMENT
     email: ML-ENABLEMENT@fin.org

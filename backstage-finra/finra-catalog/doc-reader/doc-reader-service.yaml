@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: doc-reader
+  description: Web-portal that shows you your pdf data and list of entities
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: website
+  lifecycle: production
+  system: dev
+  owner: group:default/mlenablement

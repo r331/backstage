@@ -1,44 +1,16 @@
----
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-system
-apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
-  name: examples
-spec:
-  owner: guests
----
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: example-website
+  name: pdf-ocr
+  description: A service that extracts text from PDFs and returns it as JSON.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
 spec:
-  type: website
-  lifecycle: experimental
-  owner: guests
-  system: examples
-  providesApis: [example-grpc-api]
----
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
-apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: example-grpc-api
-spec:
-  type: grpc
-  lifecycle: experimental
-  owner: guests
-  system: examples
-  definition: |
-    syntax = "proto3";
-
-    service Exampler {
-      rpc Example (ExampleMessage) returns (ExampleMessage) {};
-    }
-
-    message ExampleMessage {
-      string example = 1;
-    };
+  type: service
+  lifecycle: production
+  system: dev
+  owner: group:default/ocrteam
+  providesApis: [ocr-grpc-api,pdf-ocr-api]
 ---
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
 apiVersion: backstage.io/v1alpha1
@@ -47,9 +19,9 @@ metadata:
   name: pdf-ocr-api
 spec:
   type: openapi
-  lifecycle: experimental
+  lifecycle: productions
   owner: group:default/mlteam
-  system: examples
+  system: dev
   definition: |
     openapi: 3.0.0
     info:
@@ -129,3 +101,24 @@ spec:
               type: integer
               format: int32
               description: Height of the content
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ocr-grpc-api
+spec:
+  type: grpc
+  lifecycle: deprecated
+  owner: guests
+  system: dev
+  definition: |
+    syntax = "proto3";
+
+    service Exampler {
+      rpc Example (ExampleMessage) returns (ExampleMessage) {};
+    }
+
+    message ExampleMessage {
+      string example = 1;
+    };

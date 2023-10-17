@@ -29,12 +29,8 @@ backend:
   # The production database configuration is stored in app-config.production.yaml
   database:
     # config options: https://node-postgres.com/apis/client
-    client: pg
-    connection:
-      host: localhost
-      port: 5432
-      user: postgres
-      password: mysecretpassword
+    client: better-sqlite3
+    connection: ':memory:'
       # https://node-postgres.com/features/ssl
       # you can set the sslmode configuration option via the `PGSSLMODE` environment variable
       # see https://www.postgresql.org/docs/current/libpq-ssl.html Table 33.1. SSL Mode Descriptions (e.g. require)
@@ -89,7 +85,7 @@ catalog:
   locations:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
-      target: ../../examples/entities.yaml
+      target: ../../finra-catalog/entities.yaml
 
     # Local example template
     - type: file
@@ -99,12 +95,18 @@ catalog:
 
     # Local example organizational data
     - type: file
-      target: ../../examples/org.yaml
+      target: ../../finra-catalog/org.yaml
       rules:
         - allow: [User, Group]
 
     - type: file
-      target: ../../finra-catalog/ocr-service.yaml
+      target: ../../finra-catalog/ocr/ocr-service.yaml
+
+    - type: file
+      target: ../../finra-catalog/ml/ml-service.yaml
+
+    - type: file
+      target: ../../finra-catalog/doc-reader/doc-reader-service.yaml
 
     ## Uncomment these lines to add more example data
     # - type: url

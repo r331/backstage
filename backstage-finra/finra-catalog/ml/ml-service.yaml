@@ -1,0 +1,79 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ml-service
+  description: A service that runs models against plain text.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  lifecycle: production
+  system: ml
+  owner: group:default/mlteam
+  providesApis: [ml-api]
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ml-api
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/mlteam
+  system: ml
+  definition: |
+    openapi: 3.0.0
+    info:
+      version: 1.0.0
+      title: Model Runner Service
+      description: A service that runs models against provided plain text
+    paths:
+      /runModel:
+        post:
+          summary: Run text through a specified model
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ModelRequest'
+          responses:
+            '200':
+              description: Model execution was successful
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ModelResponse'
+            '400':
+              description: Bad request, typically because of missing or invalid data
+            '500':
+              description: Internal server error or model execution error
+
+    components:
+      schemas:
+        ModelRequest:
+          type: object
+          properties:
+            text:
+              type: string
+              description: Plain text to be processed by the model
+            modelName:
+              type: string
+              description: Name of the model to run the text against
+              enum: [model1, model2, model3]  # Adjust this list as per available models
+          required:
+            - text
+            - modelName
+
+        ModelResponse:
+          type: object
+          properties:
+            text:
+              type: string
+              description: Original input text
+            modelName:
+              type: string
+              description: Name of the model that processed the text
+            output:
+              type: string
+              description: Model's output or result for the given text
